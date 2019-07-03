@@ -45,6 +45,11 @@ public:
 
     virtual void close() = 0;
 
+    /**
+     * Get the currently calling client endpoint.
+     */
+    static JsonRpcEndpoint* clientEndpoint();
+
 protected:
     virtual JsonRpcEndpoint* findClient(QObject* socket) = 0;
 
@@ -110,6 +115,7 @@ private:
     std::shared_ptr<JsonRpcLogger> m_logger;
     ServiceMap m_services;
     QString m_ns_separator;
+    static JsonRpcEndpoint* sm_client_endpoint;
 };
 
 }
