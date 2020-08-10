@@ -472,7 +472,7 @@ QJsonDocument JsonRpcServer::createNotification(const QString& key,
     QJsonObject noti_json_obj {
         { "jsonrpc", "2.0" },
         { "method", key },
-        { "params", value }
+        { "params", QJsonValue::fromVariant(value)}
     };
     return QJsonDocument(noti_json_obj);
 }
