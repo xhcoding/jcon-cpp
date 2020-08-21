@@ -9,12 +9,19 @@ namespace jcon {
 
 JsonRpcWebSocketServer::JsonRpcWebSocketServer(
     QObject* parent,
-    std::shared_ptr<JsonRpcLogger> logger)
+    std::shared_ptr<JsonRpcLogger> logger,
+    const QSslConfiguration& ssl)
     : JsonRpcServer(parent, logger)
-    , m_server(new QWebSocketServer("JSON RPC WebSocket server",
-                                    QWebSocketServer::NonSecureMode,
-                                    this))
 {
+    m_server = new QWebSocketServer("JSON RPC WebSocket server",
+                                    ssl.isNull() ? QWebSocketServer::NonSecureMode: QWebSocketServer::SecureMode);
+    if (!ssl.isNull()) {
+        m_server->setSslConfiguration(ssl);
+        m_server->connect(m_server, &QWebSocketServer::sslErrors,
+                          this, [this](const QList<QSslError>&){
+                              logError("Ssl error occured");
+                          });
+    }
     m_server->connect(m_server, &QWebSocketServer::newConnection,
                       this, &JsonRpcWebSocketServer::newConnection);
 }

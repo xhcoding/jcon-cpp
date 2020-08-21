@@ -7,6 +7,8 @@
 
 #include <map>
 
+#include <QSslConfiguration>
+
 class QWebSocket;
 class QWebSocketServer;
 
@@ -17,8 +19,9 @@ class JCON_API JsonRpcWebSocketServer : public JsonRpcServer
     Q_OBJECT
 
 public:
-    JsonRpcWebSocketServer(QObject* parent = nullptr,
-                           std::shared_ptr<JsonRpcLogger> logger = nullptr);
+    explicit JsonRpcWebSocketServer(QObject* parent = nullptr,
+                                    std::shared_ptr<JsonRpcLogger> logger = nullptr,
+                                    const QSslConfiguration& ssl = {});
     virtual ~JsonRpcWebSocketServer();
 
     bool listen(int port) override;
