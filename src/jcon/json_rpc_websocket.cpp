@@ -45,6 +45,11 @@ void JsonRpcWebSocket::setupSocket()
             [this](QAbstractSocket::SocketError error) {
                 emit socketError(m_socket, error);
             });
+
+    connect(m_socket, QOverload<const QList<QSslError>&>::of(&QWebSocket::sslErrors),
+            this, [this](const QList<QSslError> &){
+                m_socket->ignoreSslErrors();
+            });
 }
 
 void JsonRpcWebSocket::connectToHost(const QString& host, int port)
